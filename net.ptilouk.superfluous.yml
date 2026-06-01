@@ -1,6 +1,6 @@
 app-id: net.ptilouk.superfluous
 runtime: org.freedesktop.Platform
-runtime-version: '24.08'
+runtime-version: '25.08'
 sdk: org.freedesktop.Sdk
 command: superfluous-returnz
 rename-icon: superfluous-returnz
@@ -14,13 +14,11 @@ finish-args:
   - --socket=pulseaudio
 
 modules:
+  - shared-modules/SDL2/SDL2_image.json
+  - shared-modules/SDL2/SDL2_ttf.json
   - name: SDL_Mixer_X
     buildsystem: cmake-ninja
     builddir: true
-    sources:
-      - type: git
-        url: https://github.com/WohlSoft/SDL-Mixer-X
-        commit: 7181c771aa29deaea8bfbe6098613c3a929e9189
     config-opts:
       - -DCMAKE_BUILD_TYPE=Release
       - -DUSE_DRFLAC:BOOL=OFF
@@ -40,6 +38,10 @@ modules:
       - -DUSE_SYSTEM_SDL2:BOOL=ON
       - -DUSE_WAV:BOOL=OFF
       - -DUSE_WAVPACK:BOOL=OFF
+    sources:
+      - type: git
+        url: https://github.com/WohlSoft/SDL-Mixer-X
+        commit: 7181c771aa29deaea8bfbe6098613c3a929e9189
 
   - name: superfluous-returnz-data
     buildsystem: simple
@@ -60,10 +62,11 @@ modules:
       - -DSOSAGE_CFG_DISPLAY_DEBUG_INFO:BOOL=False
       - -DSOSAGE_DATA_FOLDER=/app/share/superfluous-returnz
       - -DSOSAGE_CFG_USE_SDL_MIXER_EXT:BOOL=True
+      - -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+    post-install:
+      - install -Dm0644 /app/share/icons/superfluous-returnz.svg -t /app/share/icons/hicolor/scalable/apps/
     sources:
       - type: git
         url: https://github.com/sgiraudot/sosage
         commit: 266df855e3f22db1cb8f64514b502d9ac6dfaa0a
-    post-install:
-      - install -Dm0644 /app/share/icons/superfluous-returnz.svg /app/share/icons/hicolor/scalable/apps/superfluous-returnz.svg
-      
+
